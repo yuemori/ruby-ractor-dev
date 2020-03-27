@@ -8,9 +8,9 @@ RUN set -eux; \
 		echo 'update: --no-document'; \
 	} >> /usr/local/etc/gemrc
 
-ENV RUBY_MAJOR 2.7
-ENV RUBY_VERSION 2.7.0
-ENV RUBY_DOWNLOAD_SHA256 27d350a52a02b53034ca0794efe518667d558f152656c2baaf08f3d0c8b02343
+ENV RUBY_MAJOR 2.8
+ENV RUBY_VERSION 2.8.0dev
+ENV RUBY_COMMIT_SHA 03e5d40da14951c8de33d9dbf4e36f2a57f196bc
 
 # some of ruby's build scripts are written in ruby
 #   we purge system ruby later to make sure our final image uses what we just built
@@ -23,17 +23,16 @@ RUN set -eux; \
 		dpkg-dev \
 		libgdbm-dev \
 		ruby \
+    git \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
-	wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz"; \
-	echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz" | sha256sum --check --strict; \
-	\
-	mkdir -p /usr/src/ruby; \
-	tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1; \
-	rm ruby.tar.xz; \
-	\
-	cd /usr/src/ruby; \
+  mkdir /usr/src/ruby; \
+  cd /usr/src/ruby; \
+  git init; \
+  git remote add origin https://github.com/ko1/ruby; \
+  git fetch --depth 1 origin $RUBY_COMMIT_SHA; \
+  git reset --hard FETCH_HEAD; \
 	\
 # hack in "ENABLE_PATH_CHECK" disabling to suppress:
 #   warning: Insecure world writable dir
