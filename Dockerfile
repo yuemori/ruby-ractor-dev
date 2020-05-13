@@ -10,7 +10,7 @@ RUN set -eux; \
 
 ENV RUBY_MAJOR 2.8
 ENV RUBY_VERSION 2.8.0dev
-ENV RUBY_COMMIT_SHA 999220e5298dade1d57ef86f7eb36c66a1b5001c
+ENV RUBY_COMMIT_SHA 94ce071b409dba6d7f36bd41323de779f6fddefe
 
 # some of ruby's build scripts are written in ruby
 #   we purge system ruby later to make sure our final image uses what we just built
